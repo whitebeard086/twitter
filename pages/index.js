@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Feed, Sidebar } from "../containers";
+import { Feed, Sidebar, Widgets } from "../containers";
 
 export default function Home() {
   return (
@@ -18,6 +18,7 @@ export default function Home() {
         <Feed />
 
         {/* Widgets */}
+        <Widgets />
 
         {/* Modal */}
       </main>
