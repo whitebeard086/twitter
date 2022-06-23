@@ -1,7 +1,29 @@
 import { SparklesIcon } from "@heroicons/react/outline";
-import { Input } from "../components";
+import { Input, Post } from "../components";
 
 const Feed = () => {
+  const posts = [
+    {
+      id: 1,
+      name: "Alex Ejimkaraonye",
+      username: "Exorcist02",
+      userImage: "https://avatars.githubusercontent.com/u/40230065?v=4",
+      postImage:
+        "https://images.unsplash.com/photo-1512552288940-3a300922a275?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dmFjYXRpb258ZW58MHx8MHx8&auto=format&fit=crop&w=500&q=60",
+      text: "Taking a much needed break!",
+      timestamp: "2 hours ago",
+    },
+    {
+      id: 2,
+      name: "Alex Ejimkaraonye",
+      username: "Exorcist02",
+      userImage: "https://avatars.githubusercontent.com/u/40230065?v=4",
+      postImage:
+        "https://images.unsplash.com/photo-1548957175-84f0f9af659e?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTV8fHZhY2F0aW9ufGVufDB8fDB8fA%3D%3D&auto=format&fit=crop&w=500&q=60",
+      text: "We just out here chilling!",
+      timestamp: "13 hours ago",
+    },
+  ];
   return (
     <div className="xl:ml-[370px] border-l border-r border-gray-200 xl:min-w-[576px] sm:ml-[73px] flex-grow max-w-xl ">
       {/* Header */}
@@ -13,6 +35,10 @@ const Feed = () => {
       </div>
       {/* Input field */}
       <Input />
+      {/* Posts feed */}
+      {posts.map((post) => (
+        <Post key={post.id} post={post} />
+      ))}
     </div>
   );
 };
