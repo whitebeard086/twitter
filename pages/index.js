@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { Feed, Sidebar, Widgets } from "../containers";
 
-export default function Home({ newsResults }) {
+export default function Home({ newsResults, randomUsers }) {
   return (
     <div>
       <Head>
@@ -18,7 +18,7 @@ export default function Home({ newsResults }) {
         <Feed />
 
         {/* Widgets */}
-        <Widgets newsResults={newsResults.articles} />
+        <Widgets newsResults={newsResults.articles} randomUsers={randomUsers.results} />
 
         {/* Modal */}
       </main>
@@ -32,7 +32,14 @@ export async function getServerSideProps() {
   const newsResults = await fetch(
     "https://saurav.tech/NewsAPI/everything/cnn.json"
   ).then((res) => res.json());
+
+  // Who to follow
+
+  const randomUsers = await fetch(
+    "https://randomuser.me/api/?results=30&inc=name,login,picture"
+  ).then((res) => res.json());
+
   return {
-    props: { newsResults },
+    props: { newsResults, randomUsers },
   };
 }
