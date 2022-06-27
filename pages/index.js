@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Feed, Sidebar, Widgets } from "../containers";
+import { CommentModal, Feed, Sidebar, Widgets } from "../containers";
 
 export default function Home({ newsResults, randomUsers }) {
   return (
@@ -21,6 +21,7 @@ export default function Home({ newsResults, randomUsers }) {
         <Widgets newsResults={newsResults.articles} randomUsers={randomUsers.results} />
 
         {/* Modal */}
+        <CommentModal />
       </main>
     </div>
   );
