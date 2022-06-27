@@ -19,13 +19,14 @@ import { useRecoilState } from "recoil";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Moment from "react-moment";
-import { modalState } from "../atom/modalAtom";
+import { modalState, postIdState } from "../atom/modalAtom";
 import { db, storage } from "../firebase";
 
 const Post = ({ post }) => {
   const [liked, setLiked] = useState([]);
   const [hasLiked, setHasLiked] = useState(false);
   const [open, setOpen] = useRecoilState(modalState);
+  const [postId, setPostId] = useRecoilState(postIdState);
 
   const { data: session } = useSession();
 
@@ -120,7 +121,18 @@ const Post = ({ post }) => {
         {/* icons */}
 
         <div className="flex justify-between text-gray-500 p-2">
-          <ChatIcon onClick={() => setOpen(!open)} className="h-7 w-7 hover-effect hover:text-sky-500 hover:bg-sky-100" />
+          <ChatIcon
+            onClick={() => {
+              if (session) {
+                setPostId(post.id);
+                setOpen(!open);
+              } else {
+                alert("You must be logged in to comment on a post");
+                signIn();
+              }
+            }}
+            className="h-7 w-7 hover-effect hover:text-sky-500 hover:bg-sky-100"
+          />
           {session?.user.uid === post?.data().id && (
             <TrashIcon
               onClick={deletePost}
