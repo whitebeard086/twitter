@@ -59,7 +59,10 @@ const Post = ({ post }) => {
   const deletePost = async () => {
     if (window.confirm("Are you sure you want to delete this post?")) {
       await deleteDoc(doc(db, "posts", post.id));
-      await deleteObject(ref(storage, `posts/${post.id}/image`));
+
+      if (post.data().image) {
+        await deleteObject(ref(storage, `posts/${post.id}/image`));
+      }
     }
   };
 
@@ -100,12 +103,16 @@ const Post = ({ post }) => {
         </p>
 
         {/* post image */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          className="rounded-2xl mr-2"
-          src={post.data().image}
-          alt="post-image"
-        />
+        {post.data().image && (
+          <>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="rounded-2xl mr-2"
+              src={post.data().image}
+              alt="post-image"
+            />
+          </>
+        )}
 
         {/* icons */}
 
