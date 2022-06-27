@@ -14,10 +14,11 @@ import {
   onSnapshot,
   setDoc,
 } from "firebase/firestore";
+import { deleteObject, ref } from "firebase/storage";
 import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Moment from "react-moment";
-import { db } from "../firebase";
+import { db, storage } from "../firebase";
 
 const Post = ({ post }) => {
   const [liked, setLiked] = useState([]);
@@ -52,6 +53,13 @@ const Post = ({ post }) => {
     } else {
       alert("You must be logged in to like a post");
       signIn();
+    }
+  };
+
+  const deletePost = async () => {
+    if (window.confirm("Are you sure you want to delete this post?")) {
+      await deleteDoc(doc(db, "posts", post.id));
+      await deleteObject(ref(storage, `posts/${post.id}/image`));
     }
   };
 
@@ -103,7 +111,12 @@ const Post = ({ post }) => {
 
         <div className="flex justify-between text-gray-500 p-2">
           <ChatIcon className="h-7 w-7 hover-effect hover:text-sky-500 hover:bg-sky-100" />
-          <TrashIcon className="h-7 w-7 hover-effect hover:text-red-600 hover:bg-red-100" />
+          {session?.user.uid === post?.data().id && (
+            <TrashIcon
+              onClick={deletePost}
+              className="h-7 w-7 hover-effect hover:text-red-600 hover:bg-red-100"
+            />
+          )}
           <div className="flex items-center">
             {hasLiked ? (
               <HeartIconFilled
