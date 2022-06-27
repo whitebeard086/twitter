@@ -1,9 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 import { useRecoilState } from "recoil";
+import { useRouter } from "next/router";
 import Modal from "react-modal";
-import { EmojiHappyIcon, PhotographIcon, XIcon } from "@heroicons/react/outline";
+import {
+  EmojiHappyIcon,
+  PhotographIcon,
+  XIcon,
+} from "@heroicons/react/outline";
 import { useEffect, useState } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  serverTimestamp,
+} from "firebase/firestore";
 import Moment from "react-moment";
 import { useSession } from "next-auth/react";
 
@@ -17,6 +28,7 @@ const CommentModal = () => {
   const [input, setInput] = useState("");
 
   const { data: session } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     onSnapshot(doc(db, "posts", postId), (snapshot) => {
@@ -25,8 +37,18 @@ const CommentModal = () => {
   }, [postId]);
 
   const sendComment = async () => {
+    await addDoc(collection(db, "posts", postId, "comments"), {
+      comment: input,
+      name: session.user.name,
+      username: session.user.username,
+      userImage: session.user.image,
+      timestamp: serverTimestamp(),
+    });
 
-  }
+    setOpen(false);
+    setInput("");
+    router.push(`/posts/${postId}`);
+  };
 
   return (
     <div>
@@ -63,7 +85,7 @@ const CommentModal = () => {
               </span>
             </div>
             <p className="text-gray-500 text-[15px] sm:text-[16px] ml-16 mb-2 ">
-                {post?.data()?.text}
+              {post?.data()?.text}
             </p>
 
             <div className="flex p-3 space-x-3">
@@ -86,8 +108,9 @@ const CommentModal = () => {
 
                 <div className="flex items-center justify-between pt-2.5">
                   <div className="flex">
-                    <div className="" 
-                        // onClick={() => fileRef.current.click()}
+                    <div
+                      className=""
+                      // onClick={() => fileRef.current.click()}
                     >
                       <PhotographIcon className="h-10 w-10 hover-effect p-2 text-sky-500 hover:bg-sky-100" />
                       {/* <input
