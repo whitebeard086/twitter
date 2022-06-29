@@ -1,22 +1,41 @@
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { ArrowLeftIcon } from "@heroicons/react/outline";
-import { doc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { useEffect, useState } from "react";
 
 import { CommentModal, Sidebar, Widgets } from "../../containers";
-import { Post } from "../../components";
+import { Comment, Post } from "../../components";
 import { db } from "../../firebase";
 
 const PostPage = ({ newsResults, randomUsers }) => {
   const router = useRouter();
   const { id } = router.query;
   const [post, setPost] = useState(null);
+  const [comments, setComments] = useState([]);
 
+  // get post data
   useEffect(
     () => onSnapshot(doc(db, "posts", id), (snapshot) => setPost(snapshot)),
     [id]
   );
+
+  // get post comments
+  useEffect(() => {
+    onSnapshot(
+      query(
+        collection(db, "posts", id, "comments"),
+        orderBy("timestamp", "desc")
+      ),
+      (snapshot) => setComments(snapshot.docs)
+    );
+  }, [id]);
 
   return (
     <div>
@@ -45,6 +64,19 @@ const PostPage = ({ newsResults, randomUsers }) => {
           </div>
 
           <Post id={id} post={post} />
+
+          {/* Comments */}
+          {comments.length > 0 ? (
+            <>
+              <div className="">
+                {comments.map((comment) => (
+                  <Comment key={comment.id} id={comment.id} comment={comment?.data()} />
+                ))}
+              </div>
+            </>
+          ) : (
+            <p>No comments yet</p>
+          )}
         </div>
 
         {/* Widgets */}
