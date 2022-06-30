@@ -42,6 +42,7 @@ const CommentModal = () => {
       name: session.user.name,
       username: session.user.username,
       userImage: session.user.image,
+      userId: session.user.uid,
       timestamp: serverTimestamp(),
     });
 

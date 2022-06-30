@@ -119,7 +119,7 @@ const Post = ({ post, id }) => {
         </div>
 
         {/* post text */}
-        <p className="text-gray-800 text-[15px] sm:text-[16px] mb-2">
+        <p onClick={() => router.push(`/posts/${id}`)} className="text-gray-800 text-[15px] sm:text-[16px] mb-2">
           {post?.data()?.text}
         </p>
 
@@ -130,6 +130,7 @@ const Post = ({ post, id }) => {
               className="rounded-2xl mr-2"
               src={post?.data()?.image}
               alt="post-image"
+              onClick={() => router.push(`/posts/${id}`)}
             />
           </>
         )}
