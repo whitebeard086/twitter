@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { CommentModal, Sidebar, Widgets } from "../../containers";
 import { Comment, Post } from "../../components";
 import { db } from "../../firebase";
+import { AnimatePresence, motion } from "framer-motion";
 
 const PostPage = ({ newsResults, randomUsers }) => {
   const router = useRouter();
@@ -69,14 +70,25 @@ const PostPage = ({ newsResults, randomUsers }) => {
           {comments.length > 0 ? (
             <>
               <div className="">
-                {comments.map((comment) => (
-                  <Comment
-                    key={comment.id}
-                    commentId={comment.id}
-                    commentPostId={id}
-                    comment={comment?.data()}
-                  />
-                ))}
+                <AnimatePresence>
+                  {comments.map((comment) => (
+                    <>
+                      <motion.div
+                        key={comment.id}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 1 }}
+                      >
+                        <Comment
+                          commentId={comment.id}
+                          commentPostId={id}
+                          comment={comment?.data()}
+                        />
+                      </motion.div>
+                    </>
+                  ))}
+                </AnimatePresence>
               </div>
             </>
           ) : (
